@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>hive导出数据到集群问题 | VALUX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="使用hive过程导出数据命令如下12INSERT OVERWRITE [LOCAL] DIRECTORY &apos;path&apos; SELECT ...
+如果添加了LOCAL关键字，则会在本地及路径导出数据，否则导出到集群地址。
+
+使用过程中发现一个问题，每次导出到集群地址时，最后一步总是distcp操作，耗时很长。原来HIVE执行过程中会在临时地址导出数据，再进行一次复制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hive导出数据到集群问题">
+<meta property="og:url" content="http://valux.cn/2015/09/20/42a86dc34527798d/index.html">
+<meta property="og:site_name" content="VALUX">
+<meta property="og:description" content="使用hive过程导出数据命令如下12INSERT OVERWRITE [LOCAL] DIRECTORY &apos;path&apos; SELECT ...
+如果添加了LOCAL关键字，则会在本地及路径导出数据，否则导出到集群地址。
+
+使用过程中发现一个问题，每次导出到集群地址时，最后一步总是distcp操作，耗时很长。原来HIVE执行过程中会在临时地址导出数据，再进行一次复制">
+<meta property="og:updated_time" content="2015-09-24T16:25:33.461Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hive导出数据到集群问题">
+<meta name="twitter:description" content="使用hive过程导出数据命令如下12INSERT OVERWRITE [LOCAL] DIRECTORY &apos;path&apos; SELECT ...
+如果添加了LOCAL关键字，则会在本地及路径导出数据，否则导出到集群地址。
+
+使用过程中发现一个问题，每次导出到集群地址时，最后一步总是distcp操作，耗时很长。原来HIVE执行过程中会在临时地址导出数据，再进行一次复制">
+  
+    <link rel="alternative" href="/atom.xml" title="VALUX" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <script src="/js/jquery-2.1.4.min.js" type="text/javascript"></script>
+  
+  
+    <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?6a7982ffd64704578c67a74f393d757a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+  
+
+  
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-65362177-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  
+
+</head>
+<body style="background-color: #FFF">
+  <img class="bg-image" src="/img/background.jpg">
+  <header id="header" class="clearfix header-fixed-top">
+  <div class="nav">
+    <h1>
+      <a href="http://valux.cn">VALUX</a>
+    </h1>
+    <ul>
+        
+         <li>
+          <a class="main-nav-link" href="/">主页</a>
+          </li>
+        
+         <li>
+          <a class="main-nav-link" href="/archives">归档</a>
+          </li>
+        
+         <li>
+          <a class="main-nav-link" href="/tags">标签</a>
+          </li>
+        
+         <li>
+          <a class="main-nav-link" href="/about">关于</a>
+          </li>
+        
+    </ul>
+  </div>
+</header>
+
+  <div id="container">
+  
+    <div id="article-anchor" class="article-anchor">
+    <p>
+        <b id="article-anchor-content-toggle" title="收起" style="cursor:pointer;">目录[-]</b>
+    </p>
+    <div class="article-anchor-content" id="article-anchor-content"> </div>
+</div>
+
+
+<script>
+	$(document).ready(function(){
+		var title = $("#article-title").text().trim();
+
+		$("#article-anchor-content").append('<li><a class="article-anchor-title anchor-link" onclick="return false;" href="#" link="#article-title">'
+			+title +'</a></li>');
+		
+
+		$(".article-inner").find("h2,h3,h4,h5,h6").each(function(i,item){
+		    var tag = $(item).get(0).localName;
+		    $(item).attr("id","anchor-h"+i);
+		    $("#article-anchor-content").append('<li><a class="article-anchor-'+tag+' anchor-link" onclick="return false;" href="#" link="#anchor-h'+i+'">'
+		    	+$(this).text().trim()+'</a></li>');		    
+		});
+
+		$(".article-anchor-h2").css("margin-left",0);
+		$(".article-anchor-h3").css("margin-left",10);
+		$(".article-anchor-h4").css("margin-left",20);
+		$(".article-anchor-h5").css("margin-left",30);
+		$(".article-anchor-h6").css("margin-left",40);
+
+		$("#article-anchor-content-toggle").click(function(){
+		    var text = $(this).html();
+		    if(text=="目录[-]"){
+		        $(this).html("目录[+]");
+		        $(this).attr({"title":"展开"});
+		    }else{
+		        $(this).html("目录[-]");
+		        $(this).attr({"title":"收起"});
+		    }
+		    $("#article-anchor-content").toggle();
+		});
+
+		$(".anchor-link").click(function(){
+			$("html,body").animate({scrollTop: $($(this).attr("link")).offset().top - 50}, 1000);
+		});
+
+	});
+</script>
+  
+  <div id="main" class="clearfix">
+    <div class="content clearfix">      
+      <article id="post-hive导出数据到集群问题" class="article article-type-post" itemscope itemprop="blogPost">
+        <h2 class="title">
+          <a id="article-title" href="">hive导出数据到集群问题</a>
+        </h2>
+        <div class="tag-list">
+          
+          <span class="article-meta">
+            <a href="/2015/09/20/42a86dc34527798d/" class="article-date">
+  	<time datetime="2015-09-20T02:21:25.000Z" itemprop="datePublished">2015-09-20</time>
+</a>
+          </span>
+          
+          
+	<span class="article-tag">
+		标签: &nbsp;
+		<a class="article-tag-link" href="/tags/hive/">hive</a>
+	</span>
+         
+        </div>                    
+            <div class="article-inner">
+              
+                <input type="hidden" class="isFancy" />
+                
+
+                          <div class="article-entry" itemprop="articleBody">
+                            
+                                  <p>使用<code>hive</code>过程导出数据命令如下<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">INSERT</span> OVERWRITE [<span class="keyword">LOCAL</span>] DIRECTORY <span class="string">'path'</span> </span><br><span class="line"><span class="keyword">SELECT</span> ...</span></span><br></pre></td></tr></table></figure></p>
+<p>如果添加了<code>LOCAL</code>关键字，则会在本地及路径导出数据，否则导出到集群地址。</p>
+<blockquote>
+<p>使用过程中发现一个问题，每次导出到<code>集群地址</code>时，最后一步总是<code>distcp</code>操作，耗时很长。<br>原来<code>HIVE</code>执行过程中会在临时地址导出数据，再进行一次复制  </p>
+</blockquote>
+
+                                    
+                          </div>
+                          
+            </div>   
+             
+              <blockquote class="post-copyright">
+	<p>作者： <a target="_blank" href="http://valux.cn">VALUX</a></p>
+	<p>链接： <a target="_blank" href="http://valux.cn/2015/09/20/42a86dc34527798d/">http://valux.cn/2015/09/20/42a86dc34527798d/</a></p>
+	<p> 
+		本文基于<a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/2.5/cn/">署名-非商业性使用-相同方式共享 2.5</a>中国大陆许可协议发布，转载请保留本文的署名
+        <a target="_blank" href="http://valux.cn">Valux</a> 和 <a target="_blank" href="http://valux.cn/2015/09/20/42a86dc34527798d/">原文链接</a>
+	</p>
+</blockquote>
+            
+
+            
+      </article>
+
+      
+        
+<nav id="article-nav">
+  
+
+  
+  <span id="article-nav-older" >
+    <strong class="article-nav-caption">下一篇:</strong>
+    <a href="/2015/09/11/e69dc94caee129a6/" class="article-nav-link-wrap">      
+      <span class="article-nav-title">一道前端笔试题add(2)(6)</span>      
+    </a>
+  </span>
+  
+</nav>
+
+            
+    
+      
+        <!-- UY BEGIN -->
+<div id="uyan_frame" style="margin-top:25px;"></div>
+<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=1970884"></script>
+<!-- UY END -->      
+      
+    </div>
+  
+  </div>
+  
+  <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; VALUX 2015 
+        | BLOG <a href="https://hexo.io/" target="_blank" style="color: #bbb;"> Hexo</a>
+        | THEMES <a href="https://github.com/SerhoLiu/serholiu.com" target="_blank" style="color: #bbb;"> MiniAkio</a>        
+    	</div>
+      	<a href="javascript:$('html,body').animate({scrollTop: $('html').offset().top }, 1000);" class="to-top">TOP</a>
+    </div>
+  </div>
+</footer>
+
+
+</div>
+
+
+</body>
+</html>
