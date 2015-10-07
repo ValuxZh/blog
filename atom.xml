@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Coding the world.]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://valux.cn//"/>
-  <updated>2015-09-24T16:25:33.461Z</updated>
+  <updated>2015-10-07T09:47:21.128Z</updated>
   <id>http://valux.cn//</id>
   
   <author>
@@ -14,6 +14,47 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Javascript的this关键字]]></title>
+    <link href="http://valux.cn/2015/09/23/0140f67a4e72fb49/"/>
+    <id>http://valux.cn/2015/09/23/0140f67a4e72fb49/</id>
+    <published>2015-09-23T02:24:32.000Z</published>
+    <updated>2015-10-07T09:47:21.128Z</updated>
+    <content type="html"><![CDATA[<h3 id="this_关键字">this 关键字</h3><p><code>this</code>关键字在<code>javascript</code>中比较微妙，通常<code>this</code>指向函数<em>执行时</em>的当前对象。如果没有明确当前对象，那么<code>this</code>指向的是一个<em>全局对象</em>，在浏览器中，这个<em>全局对象</em>就是<code>window</code> </p>
+<h3 id="0-_问题">0. 问题</h3><p>这也是最近面试前端时出的一道题，正确率比较低<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name = <span class="string">"Javascript"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> o = &#123;</span><br><span class="line">    name: <span class="string">"World"</span>,</span><br><span class="line">    sayHello: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Hello "</span> + <span class="keyword">this</span>.name);</span><br><span class="line">    &#125;,</span><br><span class="line">    waitSayHello: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"Hello "</span> + <span class="keyword">this</span>.name);</span><br><span class="line">        &#125;, <span class="number">1000</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    fooSayHello: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"Hello "</span> + <span class="keyword">this</span>.name);</span><br><span class="line">        &#125;();</span><br><span class="line">    &#125;,</span><br><span class="line">    evalSayHello: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">eval</span>(<span class="string">"console.log('Hello '+ this.name)"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="number">1</span>) o.sayHello();        </span><br><span class="line"><span class="number">2</span>) o.waitSayHello();    </span><br><span class="line"><span class="number">3</span>) o.fooSayHello();     </span><br><span class="line"><span class="number">4</span>) o.evalSayHello();</span><br></pre></td></tr></table></figure></p>
+<h3 id="1-_Q1">1. Q1</h3><blockquote>
+<p>Hello World   </p>
+</blockquote>
+<p>送分题，这里我们首先定义了全局变量<code>name</code>，然后定义了对象<code>o</code>，默认情况下<code>o</code>中的<code>this</code>关键字都应该指代对象<code>o</code></p>
+<h3 id="2-_Q2">2. Q2</h3><blockquote>
+<p>Hello Javascript</p>
+</blockquote>
+<p><code>setTimeout</code> 和 <code>setInterval</code>在执行时，当前对象指代的是全局对象。为了保证在匿名回调函数里进行正确的指代，我们对代码做如下修改<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123;</span><br><span class="line">    name: <span class="string">"World"</span>,</span><br><span class="line">    waitSayHello: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> self = <span class="keyword">this</span>;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"Hello "</span> + self.name);</span><br><span class="line">        &#125;, <span class="number">1000</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Hello World</span></span><br></pre></td></tr></table></figure></p>
+<p>根据闭包的特性利用<code>self</code>指向当前的对象</p>
+<h3 id="3-_Q3">3. Q3</h3><blockquote>
+<p>Hello Javascript</p>
+</blockquote>
+<p>这里直接返回了一个自执行的匿名函数，注意，此匿名函数<code>return</code>后的作用域已经跳出的对象<code>o</code>，运行时此匿名函数中的<code>this</code>指代的便是全局对象。为了便于理解继续看如下代码，<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">foo = o.sayHello</span><br><span class="line">foo()</span><br><span class="line"><span class="comment">// Hello Javascript</span></span><br></pre></td></tr></table></figure></p>
+<p>这里我们将<code>sayHello</code>这个函数传递给<code>foo</code>，并单独执行。注意其运行时已经处于了全局对象中。这里和<code>call</code>，<code>apply</code>原理类似，已经强制改变了函数执行时的当前对象</p>
+<h3 id="4-_Q4">4. Q4</h3><blockquote>
+<p>Hello World</p>
+</blockquote>
+<p><code>eval</code>执行代码的作用域依然处于当前作用域内</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h3 id="this_关键字">this 关键字</h3><p><code>this</code>关键字在<code>javascript</code>中比较微妙，通常<code>this</code>指向函数<em>执行时</em>的当前对象。如果没有明确当前对象，那么<c]]>
+    </summary>
+    
+      <category term="Javascript" scheme="http://valux.cn/tags/Javascript/"/>
+    
+      <category term="this" scheme="http://valux.cn/tags/this/"/>
+    
+      <category term="essay" scheme="http://valux.cn/categories/essay/"/>
+    
+      <category term="javascript" scheme="http://valux.cn/categories/essay/javascript/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[hive导出数据到集群问题]]></title>
