@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Coding the world.]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://valux.cn//"/>
-  <updated>2015-10-07T09:47:21.128Z</updated>
+  <updated>2015-10-12T13:33:16.324Z</updated>
   <id>http://valux.cn//</id>
   
   <author>
@@ -14,6 +14,54 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[UML类图学习总结]]></title>
+    <link href="http://valux.cn/2015/09/24/f4de94c4e38297da/"/>
+    <id>http://valux.cn/2015/09/24/f4de94c4e38297da/</id>
+    <published>2015-09-23T16:24:32.000Z</published>
+    <updated>2015-10-12T13:33:16.324Z</updated>
+    <content type="html"><![CDATA[<h3 id="UML类图">UML类图</h3><p>UML类图中，通常用如下图示表示一个类（接口），将成员变量和方法依次列出，同时可以用<code>+/-</code>作为访问控制符标识其在类里的访问范围<br><img src="/img/20150924/20150924-01.png" alt="UML类图"><br>通常，类（接口）之间有如下六种关系</p>
+<blockquote>
+<ol>
+<li>泛化 - <em>Generalization</em></li>
+<li>实现 - <em>Realization</em></li>
+<li>组合 - <em>Composition</em></li>
+<li>聚合 - <em>Aggregation</em></li>
+<li>关联 - <em>Association</em></li>
+<li>依赖 - <em>Dependency</em></li>
+</ol>
+</blockquote>
+<p><code>关联</code>、<code>聚合</code>、<code>组合</code>、<code>依赖</code>在其形态上比较接近，但是可以通过类之间关系的强弱来区分，具体如下</p>
+<blockquote>
+<p>泛化 = 实现 &gt; 组合 &gt; 聚合 &gt; 关联 &gt; 依赖 </p>
+</blockquote>
+<h3 id="1-_泛化_Generalization">1. 泛化 Generalization</h3><p><code>泛化</code>描述的是一种高度抽象的继承关系，从一般到特殊，从父类继承所有属性和行为到子类并扩展。通常用空心三角箭头实线表示<code>泛化</code>关系，箭头指向父类<br><img src="/img/20150924/20150924-02.png" alt="泛化"><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">Animal</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> Age &#123; <span class="keyword">get</span>; <span class="keyword">set</span>;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Human</span>: <span class="title">Animal</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Speak</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>Animal</code>是一个泛化的类，而且动物本身是一个抽象的概念，因此可以标记为<code>抽象类</code>。同时我们从抽象的<code>Animal</code>特化出其子类<code>Human</code>，继承了其所有的属性，同时可以扩展出特化的方法或者特性，例如<code>speak</code>。这里可以根据<code>OOP</code>思想，将<code>泛化</code>理解为<code>is-a</code>。</p>
+<h3 id="2-_实现_Realization">2. 实现 Realization</h3><p><code>实现</code>描述的是类和接口的关系，表示类对接口所定义的特性和行为的实现。通常用空心三角箭头虚线表示<code>实现</code>关系，箭头指向接口<br><img src="/img/20150924/20150924-03.png" alt="实现"><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IMoveable</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Move</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Bird</span>: <span class="title">IMoveable</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Move</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//<span class="doctag"><span class="keyword">TODO</span></span></span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>实现</code>通过<code>接口</code>规范行为，不同的子类需要实现相同的行为，但是可以表现为不同的形式。</p>
+<h3 id="3-_组合_Composition">3. 组合 Composition</h3><p><code>组合</code>描述的也是整体与部分之间的关系，但是部分不能脱离整体单独用存在。通常用实心菱形实线表示，菱形指向整体<br><img src="/img/20150924/20150924-06.png" alt="组合"><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Department</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Company</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;Department&gt; Departments &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>Department</code>这里也是一个抽象并不实际存在的概念，需要依赖于<code>Company</code>这个整体，同时也<em>组成</em>了<code>Company</code>这个整体</p>
+<h3 id="4-_聚合_Aggregation">4. 聚合 Aggregation</h3><p><code>聚合</code>描述的是整体与部分之间的关系，但是部分可以脱离整体单独存在。通常用空心菱形实线表示，菱形指向整体<br><img src="/img/20150924/20150924-05.png" alt="聚合"><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CPU</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Memery</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Computer</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> CPU Cpu &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> Memery Memery &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>聚合</code>和<code>组合</code>概念感觉非常相近，但是可以看出<code>CPU</code>和<code>Memery</code>这两个部分是可以独立于<code>Computer</code>这个整体而存在的</p>
+<h3 id="5-_关联_Association">5. 关联 Association</h3><p><code>关联</code>描述的是类与类之间的联接关系，即一个类知道另一个类的属性和方法，这种关系既可以是单项的，也可以使双向的。通常用箭头实线表示<br><img src="/img/20150924/20150924-04.png" alt="关联"><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Course</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Teacher</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;Student&gt; Students &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> List&lt;Course&gt; Courses &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Student</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;Teacher&gt; Teachers &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> List&lt;Course&gt; Courses &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="6-_依赖_Dependency">6. 依赖 Dependency</h3><p><code>依赖</code>描述的是使用关系，即一个类完成某种功能或者特性需要另外一个类的协助，而且这种依赖一般是单向的。通常使用单箭头的虚线表示，箭头指向依赖方<br><img src="/img/20150924/20150924-07.png" alt="组合"><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Computer</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">DoWork</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Engineer</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> Computer &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Engineer</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        Computer = <span class="keyword">new</span> Computer();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>Engineer</code>依赖于<code>Computer</code>完成工作，这种关系是单向的</p>
+<h3 id="参考">参考</h3><blockquote>
+<p><a href="http://blog.csdn.net/xhf55555/article/details/6896316/" target="_blank" rel="external">UML类图实例</a><br><a href="http://www.open-open.com/lib/view/open1328059700311.html" target="_blank" rel="external">UML类图几种关系的总结</a></p>
+</blockquote>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h3 id="UML类图">UML类图</h3><p>UML类图中，通常用如下图示表示一个类（接口），将成员变量和方法依次列出，同时可以用<code>+/-</code>作为访问控制符标识其在类里的访问范围<br><img src="/img/20150924/20150924]]>
+    </summary>
+    
+      <category term="UML" scheme="http://valux.cn/tags/UML/"/>
+    
+      <category term="essay" scheme="http://valux.cn/categories/essay/"/>
+    
+      <category term="other" scheme="http://valux.cn/categories/essay/other/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Javascript的this关键字]]></title>
@@ -85,7 +133,7 @@
     <link href="http://valux.cn/2015/09/11/e69dc94caee129a6/"/>
     <id>http://valux.cn/2015/09/11/e69dc94caee129a6/</id>
     <published>2015-09-10T16:24:32.000Z</published>
-    <updated>2015-09-24T16:11:15.000Z</updated>
+    <updated>2015-10-07T09:57:02.051Z</updated>
     <content type="html"><![CDATA[<h3 id="题目">题目</h3><p>最近面前端，出了如下一道题</p>
 <blockquote>
 <p>实现以下函数<br>1) add(2, 6)  // 8<br>2) add(2)(6)  // 8   请考虑兼容如下调用 add(1)(3)(5)(7)(9)</p>
